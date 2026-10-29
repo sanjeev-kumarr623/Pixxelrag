@@ -1,38 +1,4 @@
-<p align="center">
-  <img src="docs/assets/banner.png" alt="PixelRAG — Visual Retrieval-Augmented Generation" width="100%">
-</p>
-<p align="center">
-  Official codebase for <b><a href="https://arxiv.org/abs/2606.28344">PIXELRAG: Web Screenshots Beat Text for
-Retrieval-Augmented Generation</a></b>
-</p>
-<p align="center">
-  <a href="https://yichuan-w.github.io/">Yichuan Wang</a>*,
-  <a href="https://zhifei.li/">Zhifei Li</a>*,
-  <a href="https://zwcolin.github.io/">Zirui Wang</a>,
-  <a href="https://www.linkedin.com/in/paul-teiletche/">Paul Teiletche</a>,
-  <a href="https://www.linkedin.com/in/lesheng-jin-9618b0201/">Lesheng Jin</a>
-  <br>
-  <a href="https://people.eecs.berkeley.edu/~matei/">Matei Zaharia</a>†,
-  <a href="https://people.eecs.berkeley.edu/~jegonzal/">Joseph E. Gonzalez</a>†,
-  <a href="https://www.sewonmin.com/">Sewon Min</a>†
-</p>
-<p align="center"><sub>* Equal contribution &nbsp; † Equal advising</sub><br><sub>Work done at <a href="https://sky.cs.berkeley.edu/">Berkeley SkyLab</a> &amp; <a href="https://bair.berkeley.edu/">BAIR</a> &amp; <a href="https://nlp.cs.berkeley.edu/">Berkeley NLP</a></sub></p>
-<p align="center">Search any document by how it <em>looks</em>, not just the text it contains.</p>
 
-<p align="center">
-  <a href="https://github.com/StarTrail-org/PixelRAG/actions/workflows/ci.yml"><img src="https://github.com/StarTrail-org/PixelRAG/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://pixelrag.ai"><img src="https://img.shields.io/badge/demo-pixelrag.ai-7c3aed" alt="Live demo"></a>
-  <a href="https://status.pixelrag.ai"><img src="https://img.shields.io/badge/status-live-22c55e" alt="Status"></a>
-  <a href="https://join.slack.com/t/leann-e2u9779/shared_invite/zt-3ol2ww9ic-Eg_kB8omwe6xmYVd0epr4Q"><img src="https://img.shields.io/badge/Slack-join-4A154B?logo=slack&logoColor=white" alt="Slack"></a>
-  <img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License">
-</p>
-
-<p align="center">
-  <a href="#what-it-is">What it is</a> &middot;
-  <a href="#give-claude-eyes">Give Claude eyes</a> &middot;
-  <a href="#how-it-works">How it works</a> &middot;
-  <a href="#pipelines">Pipelines</a>
-</p>
 
 ---
 
@@ -343,62 +309,9 @@ curl -X POST http://localhost:8000/search \
   -d '{"queries": [{"text": "What is the capital of France?"}], "n_docs": 5}'
 ```
 
-Three things to know before using it:
 
-- **Nothing in CI builds this image.** It is best-effort and can drift when dependencies or
-  source paths move, so build it yourself before relying on it.
-- **On Apple Silicon the image builds without a renderer.** The pinned `headless_shell` is
-  published for linux-x64 only, so the build skips it on other architectures: search over a
-  prebuilt index works, on-demand rendering does not. For a renderer-capable image, build for
-  amd64 (emulated, and slower) by adding `platform: linux/amd64` to the `pixelrag-api` service.
-- **The container runs as root, so Chrome renders with its sandbox disabled.** Chrome's
-  sandbox inside a container requires `--cap-add=SYS_ADMIN` or a tailored seccomp profile,
-  and a non-root `USER` without those stops Chrome launching entirely. Container isolation
-  is therefore the only boundary around the renderer — keep the container isolated and do
-  not point it at untrusted pages otherwise.
 
-### Training
 
-Fine-tuning lives in `train/` — a **separate uv project** (`wiki-screenshot-training`) with its own
-pinned env. It LoRA-fine-tunes `Qwen/Qwen3-VL-Embedding-2B` for webpage retrieval; run it from
-inside `train/` (`cd train && uv sync`). See [`train/README.md`](train/README.md) for the full recipe.
 
-You don't need to retrain to use the model — the trained adapters are published at
-[`Chrisyichuan/wiki-screenshot-embedding-lora`](https://huggingface.co/Chrisyichuan/wiki-screenshot-embedding-lora/tree/main/lora_vit/ckpt200).
 
-We also release the full training set
-([`Chrisyichuan/screenshot-training-natural-filtered-v2`](https://huggingface.co/datasets/Chrisyichuan/screenshot-training-natural-filtered-v2)),
-so you can adapt other backbones yourself — a larger Qwen, or any other embedding model.
-The data curation pipeline (LLM-augmented query generation, filtering, hard-negative mining)
-is documented in [`train/docs/synthetic_data_pipeline.md`](train/docs/synthetic_data_pipeline.md).
 
-## Citation
-
-If you find PixelRAG useful, please cite our paper:
-
-```bibtex
-@misc{wang2026pixelragwebscreenshotsbeat,
-      title={PIXELRAG: Web Screenshots Beat Text for Retrieval-Augmented Generation}, 
-      author={Yichuan Wang and Zhifei Li and Zirui Wang and Paul Teiletche and Lesheng Jin and Matei Zaharia and Joseph E. Gonzalez and Sewon Min},
-      year={2026},
-      eprint={2606.28344},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR},
-      url={https://arxiv.org/abs/2606.28344}, 
-}
-```
-
-## Acknowledgments
-
-Thanks to [Rulin Shao](https://rulinshao.github.io/) for support.
-
-Thanks also to [Claude Code](https://github.com/anthropics/claude-code) and
-[OpenAI Codex](https://github.com/openai/codex) for supporting open-source contributors with credits and plans,
-which we earned by working on [LEANN](https://github.com/StarTrail-org/LEANN).
-
-This work is done by the [Berkeley Sky Computing Lab](https://sky.cs.berkeley.edu/),
-[BAIR](https://bair.berkeley.edu/), and the [Berkeley NLP Group](https://nlp.cs.berkeley.edu/).
-
-## License
-
-Apache-2.0
