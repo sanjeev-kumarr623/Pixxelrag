@@ -18,13 +18,6 @@ curl -X POST https://api.pixelrag.ai/search \
   -d '{"queries": [{"text": "What is the capital of France?"}], "n_docs": 5}'
 ```
 
-> **Live, hosted endpoint** — [`https://api.pixelrag.ai`](https://api.pixelrag.ai/status) serves a
-> pre-built index of **8.28M Wikipedia pages**. No setup, no API key. It even takes an image as the query
-> ([visual search](https://pixelrag.ai/docs#search)) — see the **[API reference →](https://pixelrag.ai/docs)**.
-
-Or try it in the browser at **[pixelrag.ai](https://pixelrag.ai)**, or run the demo notebook in
-Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/StarTrail-org/PixelRAG/blob/main/demos/quickstart.ipynb) — it
-renders a page and searches the hosted index, with the images inline.
 
 ## What it is
 
@@ -69,7 +62,6 @@ No MCP server, no backend: the skill just calls `pixelshot` (Playwright/CDP) on 
 }
 ```
 
-See [`plugin/opencode/`](plugin/opencode/) for details.
 
 ## How it works
 
